@@ -1,0 +1,16 @@
+\begin{tabular}{llcccccc}
+\toprule
+Network & Comparison & \multicolumn{3}{c}{$\Delta$PSNR (dB)} & \multicolumn{3}{c}{$\Delta$SSIM} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+ & & O & NH & Dense & O & NH & Dense \\
+\midrule
+DehazeFormer-T & R0 $-$ B0 (calibrated on test-set hazy inputs) & \textbf{+1.38} & \textbf{+1.02} & \textbf{+1.33} & \textbf{+0.070} & \textbf{+0.073} & \textbf{+0.037} \\
+DehazeFormer-T & R0\_uncal $-$ B0 (not calibrated) & -0.16 & +0.08 & -0.28 & -0.003 & \textbf{+0.004} & +0.000 \\
+DehazeFormer-T & R0\_rtts $-$ B0 (calibrated on RTTS only) & -0.08 & +0.19 & \textbf{+0.45} & \textbf{+0.057} & \textbf{+0.067} & \textbf{+0.021} \\
+DehazeFormer-T & R1\_rtts $-$ B0 (R1, calibrated on RTTS only) & -0.05 & +0.16 & \textbf{+0.61} & \textbf{+0.060} & \textbf{+0.074} & \textbf{+0.017} \\
+DehazeFormer-T & R0 $-$ R0\_rtts (test-set vs.\ RTTS calibration) & \textbf{+1.46} & \textbf{+0.83} & \textbf{+0.88} & \textbf{+0.013} & \textbf{+0.006} & \textbf{+0.016} \\
+\midrule
+gUNet-T & R1 $-$ B0 (R1, calibrated on test-set hazy inputs) & \textbf{+2.06} & \textbf{+1.14} & \textbf{+0.78} & \textbf{+0.083} & \textbf{+0.090} & \textbf{+0.053} \\
+gUNet-T & R1\_rtts $-$ B0 (R1, calibrated on RTTS only) & \textbf{+0.58} & \textbf{+0.63} & +0.13 & \textbf{+0.064} & \textbf{+0.085} & \textbf{+0.040} \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,11 @@
+it 200/2100 loss(avg200) 0.0976 lr 9.94e-05 0.94 it/s eta 33.7 min
+it 400/2100 loss(avg200) 0.0812 lr 9.46e-05 1.19 it/s eta 23.8 min
+it 600/2100 loss(avg200) 0.0716 lr 8.55e-05 1.31 it/s eta 19.1 min
+it 800/2100 loss(avg200) 0.0640 lr 7.30e-05 1.37 it/s eta 15.8 min
+it 1000/2100 loss(avg200) 0.0623 lr 5.82e-05 1.42 it/s eta 13.0 min
+it 1200/2100 loss(avg200) 0.0637 lr 4.28e-05 1.45 it/s eta 10.4 min
+it 1400/2100 loss(avg200) 0.0605 lr 2.80e-05 1.47 it/s eta 7.9 min
+it 1600/2100 loss(avg200) 0.0535 lr 1.55e-05 1.49 it/s eta 5.6 min
+it 1800/2100 loss(avg200) 0.0546 lr 6.40e-06 1.51 it/s eta 3.3 min
+it 2000/2100 loss(avg200) 0.0566 lr 1.61e-06 1.52 it/s eta 1.1 min
+it 2100/2100 loss(avg100) 0.0549 lr 1.00e-06 1.52 it/s eta 0.0 min

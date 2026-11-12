@@ -1,0 +1,25 @@
+{
+ "OHAZE": {
+  "n": 45,
+  "psnr": 18.610263404664558,
+  "ssim": 0.7648907652087369,
+  "sec": 56.8
+ },
+ "NHHAZE": {
+  "n": 55,
+  "psnr": 13.452738500665502,
+  "ssim": 0.5621935246571749,
+  "sec": 28.2
+ },
+ "DENSE": {
+  "n": 55,
+  "psnr": 12.182813448361582,
+  "ssim": 0.4949017148255753,
+  "sec": 28.5
+ },
+ "_meta": {
+  "model": "dehazeformer-b",
+  "ckpt": "runs_quick/dehazeformer-b__R3_ft_s0/final.pth",
+  "long_side": 1024
+ }
+}

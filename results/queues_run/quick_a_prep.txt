@@ -1,0 +1,12 @@
+# quick protocol, preparation (n_train 1000)
+python setup_third_party.py
+python tests/test_synth.py
+python tests/test_models.py
+python prepare_depth.py --clean_dir data/reside6k_ots/GT --out_dir data/depth/ots --limit 1000
+python prepare_params.py --clean_dir data/reside6k_ots/GT --depth_dir data/depth/ots --limit 1000 --out data/params_quick.npz
+python preflight.py --params data/params_quick.npz
+python realism.py --n 300 --params data/params_quick.npz --res_dir results_quick
+python train.py --model dehazeformer-t --arm R3 --bs 16 --time_only 100 --timing_json runs_quick/_timing/dehazeformer-t.json --out runs_quick --params data/params_quick.npz --n_train 1000 --workers 4
+python train.py --model gunet-t --arm R3 --bs 16 --time_only 100 --timing_json runs_quick/_timing/gunet-t.json --out runs_quick --params data/params_quick.npz --n_train 1000 --workers 4
+python train.py --model dehazeformer-b --arm R3 --bs 4 --init ckpt/outdoor/dehazeformer-b.pth --time_only 100 --timing_json runs_quick/_timing/dehazeformer-b.json --out runs_quick --params data/params_quick.npz --n_train 1000 --workers 4
+python train.py --model deanet --arm R3 --bs 8 --init ckpt/deanet/deanet-ots.pth --time_only 100 --timing_json runs_quick/_timing/deanet.json --out runs_quick --params data/params_quick.npz --n_train 1000 --workers 4

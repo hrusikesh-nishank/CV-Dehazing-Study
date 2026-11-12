@@ -1,0 +1,21 @@
+\begin{tabular}{llccc}
+\toprule
+Network & Comparison & O-HAZE & NH-HAZE & Dense-Haze \\
+\midrule
+\multirow{5}{*}{gUNet-T (scratch)} & R0 $-$ B0 & \textbf{+1.72} {\scriptsize[+1.20, +2.28]} & \textbf{+1.19} {\scriptsize[+0.93, +1.46]} & +0.28 {\scriptsize[-0.11, +0.68]} \\
+ & R1 $-$ B0 & \textbf{+2.06} {\scriptsize[+1.60, +2.56]} & \textbf{+1.14} {\scriptsize[+0.93, +1.35]} & \textbf{+0.78} {\scriptsize[+0.38, +1.19]} \\
+ & R3 $-$ B0 & \textbf{+1.54} {\scriptsize[+0.97, +2.08]} & \textbf{+1.17} {\scriptsize[+0.89, +1.46]} & -0.01 {\scriptsize[-0.48, +0.44]} \\
+ & R1 $-$ R0 & \textbf{+0.34} {\scriptsize[+0.08, +0.62]} & -0.05 {\scriptsize[-0.17, +0.05]} & \textbf{+0.50} {\scriptsize[+0.37, +0.63]} \\
+ & R1\_rtts $-$ B0 & \textbf{+0.58} {\scriptsize[+0.14, +1.05]} & \textbf{+0.63} {\scriptsize[+0.38, +0.89]} & +0.13 {\scriptsize[-0.23, +0.48]} \\
+\midrule
+\multirow{4}{*}{DehazeFormer-B (fine-tuned)} & R0 $-$ B0 & \textbf{+1.73} {\scriptsize[+1.41, +2.07]} & \textbf{+0.99} {\scriptsize[+0.80, +1.20]} & \textbf{+1.10} {\scriptsize[+0.81, +1.39]} \\
+ & R1 $-$ B0 & \textbf{+1.90} {\scriptsize[+1.44, +2.36]} & \textbf{+0.87} {\scriptsize[+0.68, +1.08]} & \textbf{+1.27} {\scriptsize[+0.90, +1.64]} \\
+ & R3 $-$ B0 & \textbf{+2.36} {\scriptsize[+1.77, +2.96]} & \textbf{+1.24} {\scriptsize[+0.97, +1.52]} & \textbf{+0.97} {\scriptsize[+0.57, +1.39]} \\
+ & R1 $-$ R0 & +0.17 {\scriptsize[-0.16, +0.49]} & -0.13 {\scriptsize[-0.23, -0.03]} & +0.17 {\scriptsize[-0.01, +0.35]} \\
+\midrule
+\multirow{4}{*}{DEA-Net (fine-tuned)} & R0 $-$ B0 & \textbf{+1.85} {\scriptsize[+1.42, +2.31]} & \textbf{+0.67} {\scriptsize[+0.52, +0.84]} & +0.31 {\scriptsize[-0.01, +0.64]} \\
+ & R1 $-$ B0 & +0.53 {\scriptsize[-0.08, +1.15]} & +0.13 {\scriptsize[-0.09, +0.37]} & \textbf{-1.57} {\scriptsize[-2.05, -1.09]} \\
+ & R3 $-$ B0 & \textbf{+1.22} {\scriptsize[+0.56, +1.88]} & \textbf{+0.58} {\scriptsize[+0.30, +0.90]} & -0.26 {\scriptsize[-0.73, +0.23]} \\
+ & R1 $-$ R0 & \textbf{-1.31} {\scriptsize[-1.80, -0.86]} & \textbf{-0.54} {\scriptsize[-0.75, -0.34]} & \textbf{-1.88} {\scriptsize[-2.26, -1.51]} \\
+\bottomrule
+\end{tabular}

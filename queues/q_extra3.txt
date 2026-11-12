@@ -1,0 +1,22 @@
+# Third batch (about 2.8 h). Haze density and colour calibrated ONLY on RTTS (unpaired real hazy photos,
+# disjoint from the paired test sets), then third seeds. Priority order; stop any time, then:
+#   python quick.py --report_only
+# RTTS statistics (hazy images only): dark-channel 5-95 % 0.24-0.66 -> mean transmission 0.17-0.70;
+# colour cast B-R 5-95 % -0.10..+0.08 -> daylight 5600-7500 K.
+python prepare_params.py --clean_dir data/reside6k_ots/GT --depth_dir data/depth/ots --limit 1000 --t_lo 0.17 --t_hi 0.70 --cct_min 5600 --cct_max 7500 --out data/params_quick_rtts.npz
+# 1-2. RTTS-calibrated haze: standard (R0) and linear compositing (R1)
+python train.py --model dehazeformer-t --arm R0 --seed 0 --iters 3500 --warmup 350 --params data/params_quick_rtts.npz --n_train 1000 --workers 4 --out runs_quick --tag rtts
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R0_rtts_s0/final.pth --res_dir results_quick
+python train.py --model dehazeformer-t --arm R1 --seed 0 --iters 3500 --warmup 350 --params data/params_quick_rtts.npz --n_train 1000 --workers 4 --out runs_quick --tag rtts
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R1_rtts_s0/final.pth --res_dir results_quick
+# 3-5. third seed for the headline comparisons
+python train.py --model dehazeformer-t --arm B0 --seed 2 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__B0_s2/final.pth --res_dir results_quick
+python train.py --model dehazeformer-t --arm R0 --seed 2 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R0_s2/final.pth --res_dir results_quick
+python train.py --model dehazeformer-t --arm R1 --seed 2 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R1_s2/final.pth --res_dir results_quick
+# 6. RTTS-calibrated haze on the second architecture
+python train.py --model gunet-t --arm R1 --seed 0 --iters 8400 --warmup 840 --params data/params_quick_rtts.npz --n_train 1000 --workers 4 --out runs_quick --tag rtts
+python eval_paired.py --model gunet-t --ckpt runs_quick/gunet-t__R1_rtts_s0/final.pth --res_dir results_quick
+python quick.py --report_only

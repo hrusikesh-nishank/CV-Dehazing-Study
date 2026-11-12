@@ -1,0 +1,22 @@
+{
+ "n_images": 500,
+ "mAP50": 71.49761517977764,
+ "AP50": {
+  "person": 87.59695079239773,
+  "bicycle": 80.29700185148367,
+  "car": 77.80770319848254,
+  "motorbike": 62.05294939129649,
+  "bus": 49.733470665227784
+ },
+ "niqe": 4.122089809891556,
+ "brisque": 17.2288427734375,
+ "musiq": 51.792805919647215,
+ "clipiqa": 0.24198820814490318,
+ "_meta": {
+  "model": "dehazeformer-t",
+  "ckpt": "runs_quick/dehazeformer-t__R3_s0/final.pth",
+  "pred_dir": null,
+  "subset": 500,
+  "n_iqa": 100
+ }
+}

@@ -1,0 +1,22 @@
+{
+ "n_images": 500,
+ "mAP50": 71.97682131109374,
+ "AP50": {
+  "person": 88.1853323466644,
+  "bicycle": 81.6134572350999,
+  "car": 77.92137079769745,
+  "motorbike": 61.48775022090709,
+  "bus": 50.67619595509982
+ },
+ "niqe": 4.704156995746448,
+ "brisque": 31.096417236328126,
+ "musiq": 54.843383083343504,
+ "clipiqa": 0.3532497337460518,
+ "_meta": {
+  "model": "dehazeformer-t",
+  "ckpt": "ckpt/outdoor/dehazeformer-t.pth",
+  "pred_dir": null,
+  "subset": 500,
+  "n_iqa": 100
+ }
+}

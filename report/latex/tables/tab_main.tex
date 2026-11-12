@@ -1,0 +1,24 @@
+\begin{tabular}{llcccccc}
+\toprule
+Method & Training data & \multicolumn{2}{c}{O-HAZE} & \multicolumn{2}{c}{NH-HAZE} & \multicolumn{2}{c}{Dense-Haze} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+ & & PSNR & SSIM & PSNR & SSIM & PSNR & SSIM \\
+\midrule
+Hazy input & -- & 13.78 & 0.619 & 11.48 & 0.451 & 9.61 & 0.404 \\
+DCP~\cite{he2011dcp} & none (prior) & 16.07 & 0.677 & 12.31 & 0.473 & \textbf{12.54} & 0.425 \\
+DehazeFormer-T~\cite{song2023dehazeformer} & RESIDE-OTS & 16.08 & 0.681 & 12.17 & 0.488 & 11.24 & 0.436 \\
+DehazeFormer-B~\cite{song2023dehazeformer} & RESIDE-OTS & 16.20 & 0.683 & 12.18 & 0.486 & 11.23 & 0.435 \\
+DEA-Net~\cite{chen2024deanet} & RESIDE-OTS & 16.67 & 0.705 & 12.37 & 0.506 & 11.57 & 0.443 \\
+\midrule \multicolumn{8}{l}{\emph{Trained here (1{,}000 clean images, short schedule)}} \\
+DehazeFormer-T, scratch$^{\times3}$ & B0 (RESIDE pairs) & 15.88 & 0.673 & 12.08 & 0.483 & 10.79 & 0.422 \\
+DehazeFormer-T, scratch$^{\times3}$ & R0 (ours, sRGB) & 17.25 & 0.743 & 13.10 & 0.556 & 12.12 & 0.459 \\
+DehazeFormer-T, scratch$^{\times3}$ & R1 (ours, linear) & 18.17 & 0.757 & 13.44 & 0.573 & 12.02 & 0.458 \\
+DehazeFormer-T, scratch & R1, RTTS-calibrated & 15.83 & 0.733 & 12.24 & 0.557 & 11.40 & 0.440 \\
+gUNet-T, scratch & B0 (RESIDE pairs) & 16.38 & 0.692 & 12.17 & 0.493 & 10.81 & 0.418 \\
+gUNet-T, scratch & R1 (ours, linear) & 18.45 & \textbf{0.775} & 13.30 & \textbf{0.584} & 11.58 & 0.471 \\
+DehazeFormer-B, fine-tuned & B0 (RESIDE pairs) & 16.25 & 0.680 & 12.22 & 0.484 & 11.21 & 0.433 \\
+DehazeFormer-B, fine-tuned & R3 (ours, camera) & 18.61 & 0.765 & \textbf{13.45} & 0.562 & 12.18 & \textbf{0.495} \\
+DEA-Net, fine-tuned & B0 (RESIDE pairs) & 16.85 & 0.698 & 12.44 & 0.498 & 11.48 & 0.438 \\
+DEA-Net, fine-tuned & R0 (ours, sRGB) & \textbf{18.69} & 0.756 & 13.11 & 0.547 & 11.79 & 0.460 \\
+\bottomrule
+\end{tabular}

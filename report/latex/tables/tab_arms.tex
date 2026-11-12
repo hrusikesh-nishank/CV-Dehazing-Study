@@ -1,0 +1,20 @@
+\begin{tabular}{llccccccc}
+\toprule
+Arm & Hazy-image formation & \multicolumn{2}{c}{O-HAZE} & \multicolumn{2}{c}{NH-HAZE} & \multicolumn{2}{c}{Dense-Haze} & Seeds \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}
+ & & PSNR & SSIM & PSNR & SSIM & PSNR & SSIM & \\
+\midrule
+B0 & RESIDE-OTS hazy images (official synthesis) & 15.88 & 0.673 & 12.08 & 0.483 & 10.79 & 0.422 & 3 \\
+N0 & sRGB ASM, grey airlight & 14.87 & 0.701 & 11.62 & 0.518 & 10.08 & 0.426 & 1 \\
+R0\_uncal & sRGB ASM, no density calibration & 15.72 & 0.670 & 12.16 & 0.488 & 10.51 & 0.422 & 1 \\
+R0\_rtts & sRGB ASM, calibrated on RTTS only & 15.79 & 0.730 & 12.27 & 0.550 & 11.25 & 0.443 & 1 \\
+R0 & sRGB ASM, sky-coloured airlight & 17.25 & 0.743 & 13.10 & 0.556 & \textbf{12.12} & 0.459 & 3 \\
+R1 & + linear-radiance compositing & \textbf{18.17} & \textbf{0.757} & \textbf{13.44} & \textbf{0.573} & 12.02 & 0.458 & 3 \\
+R1\_rtts & R1, calibrated on RTTS only & 15.83 & 0.733 & 12.24 & 0.557 & 11.40 & 0.440 & 1 \\
+R2 & + post-haze sensor noise & 17.35 & 0.737 & 13.09 & 0.551 & 11.53 & 0.460 & 1 \\
+R3 & + randomised ISP + JPEG & 17.64 & 0.734 & 13.11 & 0.541 & 11.82 & \textbf{0.464} & 2 \\
+R3N & R3 without sensor noise & 18.16 & 0.750 & 13.36 & 0.561 & 12.03 & 0.461 & 1 \\
+H & R0 + heterogeneous extinction & 15.47 & 0.708 & 12.52 & 0.536 & 9.72 & 0.423 & 1 \\
+R3H & R3 + heterogeneous extinction & 15.46 & 0.698 & 12.92 & 0.534 & 9.59 & 0.418 & 1 \\
+\bottomrule
+\end{tabular}

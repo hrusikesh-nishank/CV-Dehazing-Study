@@ -1,0 +1,10 @@
+python prepare_params.py --clean_dir data/reside6k_ots/GT --depth_dir data/depth/ots --limit 1000 --t_lo 0.17 --t_hi 0.70 --cct_min 5600 --cct_max 7500 --out data/params_quick_rtts.npz
+1000 images x 8 draws -> data/params_quick_rtts.npz
+  far/sky region found in 39.3% of images
+  median scene depth: 10/50/90 percentile = 4 / 14 / 48 m
+  visibility V:       10/50/90 percentile = 15 / 50 / 230 m
+  mean transmission:  10/50/90 percentile = 0.23 / 0.46 / 0.66
+  airlight (sRGB) mean R,G,B = [0.7929999828338623, 0.7889999747276306, 0.7829999923706055], B-R range = [-0.13, +0.11]
+  draws outside the V range (scene too near/far): 99 of 8000 (1.2%)
+after 0.4 min
+EXIT 0

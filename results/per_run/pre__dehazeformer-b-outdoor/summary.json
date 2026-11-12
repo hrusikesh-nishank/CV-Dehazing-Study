@@ -1,0 +1,25 @@
+{
+ "OHAZE": {
+  "n": 45,
+  "psnr": 16.201684944897288,
+  "ssim": 0.6825976076679456,
+  "sec": 61.3
+ },
+ "NHHAZE": {
+  "n": 55,
+  "psnr": 12.176772525993181,
+  "ssim": 0.4863621260844779,
+  "sec": 28.1
+ },
+ "DENSE": {
+  "n": 55,
+  "psnr": 11.231199473907617,
+  "ssim": 0.4354156660906551,
+  "sec": 28.8
+ },
+ "_meta": {
+  "model": "dehazeformer-b",
+  "ckpt": "ckpt/outdoor/dehazeformer-b.pth",
+  "long_side": 1024
+ }
+}

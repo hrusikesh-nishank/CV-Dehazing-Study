@@ -1,0 +1,22 @@
+python realism.py --n 300 --params data/params_quick.npz --res_dir results_quick
+grids written to results_quick | rows: clean, N0, R0, R1, R2, R3, R4, H, R3H, S0
+haze-density check (dark-channel mean, 5th / 50th / 95th percentile; clear photos are ~0.10):
+  clean training crops          : 0.09 / 0.27 / 0.55
+  real hazy crops (RTTS, n=284)  : 0.17 / 0.47 / 0.75   colour cast B-R -0.10 / -0.00 / 0.08
+  synthetic R0  (own V, A draws) : 0.25 / 0.48 / 0.76   colour cast B-R -0.08 / 0.02 / 0.15
+  synthetic R3  (own V, A draws) : 0.27 / 0.51 / 0.76   colour cast B-R -0.09 / 0.02 / 0.15
+  reference, whole real images  : O-HAZE 0.27 / 0.42 / 0.54; NH-HAZE 0.31 / 0.42 / 0.60; Dense-Haze 0.44 / 0.61 / 0.73; RTTS 0.24 / 0.46 / 0.66
+  -> the synthetic rows should overlap the real rows (median within about 0.1).
+C:\Users\hrusi\anaconda3\envs\haze\lib\site-packages\torchmetrics\utilities\prints.py:43: UserWarning: Metric `Kernel Inception Distance` will save all extracted features in buffer. For large datasets this may lead to large memory footprint.
+  warnings.warn(*args, **kwargs)
+KID N0  : 24.28 +- 3.42 (x1e-3)
+KID R0  : 25.64 +- 3.76 (x1e-3)
+KID R1  : 22.53 +- 3.55 (x1e-3)
+KID R2  : 29.54 +- 3.65 (x1e-3)
+KID R3  : 24.25 +- 3.59 (x1e-3)
+KID R4  : 23.16 +- 3.61 (x1e-3)
+KID H   : 30.98 +- 3.22 (x1e-3)
+KID R3H : 35.65 +- 3.74 (x1e-3)
+KID S0  : 25.73 +- 4.03 (x1e-3)
+after 0.7 min
+EXIT 0

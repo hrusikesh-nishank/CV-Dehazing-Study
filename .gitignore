@@ -1,0 +1,23 @@
+# large or third-party, not part of the repository
+/data/
+/ckpt/
+/third_party/
+/runs/
+/runs_quick/
+/results_quick/
+/logs/
+*.pth
+*.pt
+*.npz
+# generated at run time by quick.py
+/quick_a_prep.txt
+/quick_b_run.txt
+# python / latex build files
+__pycache__/
+*.pyc
+report/latex/*.aux
+report/latex/*.log
+report/latex/*.out
+report/latex/*.bbl
+report/latex/*.blg
+tests/_data/

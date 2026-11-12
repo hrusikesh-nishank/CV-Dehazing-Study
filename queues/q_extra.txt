@@ -1,0 +1,37 @@
+# Extra controls for the report (about 4.5 h). Priority order: stop any time, then run
+#   python quick.py --report_only
+# RTTS is not evaluated for these runs (it does not separate methods in this protocol).
+python prepare_params.py --clean_dir data/reside6k_ots/GT --depth_dir data/depth/ots --limit 1000 --v_min 50 --v_max 5000 --t_lo 0 --t_hi 1 --cct_min 5000 --cct_max 10000 --out data/params_quick_uncal.npz
+# 1. main claim with 2 seeds on both sides: B0 seed 1
+python train.py --model dehazeformer-t --arm B0 --seed 1 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__B0_s1/final.pth --res_dir results_quick
+# 2. grey airlight: what depth + visibility alone give
+python train.py --model dehazeformer-t --arm N0 --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__N0_s0/final.pth --res_dir results_quick
+# 3. no test-informed haze density: V 50 m-5 km log-uniform, no transmission window, daylight 5000-10000 K
+python train.py --model dehazeformer-t --arm R0 --seed 0 --iters 3500 --warmup 350 --params data/params_quick_uncal.npz --n_train 1000 --workers 4 --out runs_quick --tag uncal
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R0_uncal_s0/final.pth --res_dir results_quick
+# 4. fine-tuning control: official DehazeFormer-B fine-tuned on RESIDE's own hazy images
+python train.py --model dehazeformer-b --arm B0 --seed 0 --init ckpt/outdoor/dehazeformer-b.pth --iters 2100 --lr 1e-4 --warmup 100 --bs 4 --tag ft --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-b --ckpt runs_quick/dehazeformer-b__B0_ft_s0/final.pth --res_dir results_quick
+# 5. second architecture for the main claim
+python train.py --model gunet-t --arm B0 --seed 0 --iters 8400 --warmup 840 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model gunet-t --ckpt runs_quick/gunet-t__B0_s0/final.pth --res_dir results_quick
+# 6. best variant R1 with a second seed
+python train.py --model dehazeformer-t --arm R1 --seed 1 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R1_s1/final.pth --res_dir results_quick
+# 7. camera model without sensor noise
+python train.py --model dehazeformer-t --arm R3N --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R3N_s0/final.pth --res_dir results_quick
+# 8. fine-tuning control for DEA-Net
+python train.py --model deanet --arm B0 --seed 0 --init ckpt/deanet/deanet-ots.pth --iters 4600 --lr 1e-4 --warmup 100 --bs 8 --tag ft --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model deanet --ckpt runs_quick/deanet__B0_ft_s0/final.pth --res_dir results_quick
+# 9. linear compositing on the second architecture
+python train.py --model gunet-t --arm R1 --seed 0 --iters 8400 --warmup 840 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model gunet-t --ckpt runs_quick/gunet-t__R1_s0/final.pth --res_dir results_quick
+# 10-11. linear compositing when fine-tuning published models
+python train.py --model dehazeformer-b --arm R1 --seed 0 --init ckpt/outdoor/dehazeformer-b.pth --iters 2100 --lr 1e-4 --warmup 100 --bs 4 --tag ft --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-b --ckpt runs_quick/dehazeformer-b__R1_ft_s0/final.pth --res_dir results_quick
+python train.py --model deanet --arm R1 --seed 0 --init ckpt/deanet/deanet-ots.pth --iters 4600 --lr 1e-4 --warmup 100 --bs 8 --tag ft --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model deanet --ckpt runs_quick/deanet__R1_ft_s0/final.pth --res_dir results_quick
+python quick.py --report_only

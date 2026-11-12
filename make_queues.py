@@ -1,0 +1,101 @@
+"""Generate the FULL-protocol experiment queues (one command per line) for run_queue.py.
+(The 5-hour preliminary protocol is quick.py.)
+
+  python make_queues.py --iters 40000 --ft_iters 8000
+
+Set --iters from the timing probe (same value for EVERY from-scratch run).
+Queues, in priority order:
+  q0_prep.txt         one-off: third-party code, tests, preflight, depth, params, realism check
+  q1_baselines.txt    published models evaluated under OUR protocol (no training)
+  q2_ablation_s0.txt  main model, every arm, seed 0  (10 trainings)
+  q3_finetune.txt     official checkpoints fine-tuned on R3 / R0 / B0 (9 short trainings)
+  q4_seeds.txt        seeds 1-2 for the claim arms R0 R3 R3H H + B0 (10 trainings)
+  q5_arch2.txt        second architecture on B0 / R0 / R3 (3 trainings)
+"""
+import argparse
+from pathlib import Path
+
+FT_BS = {"dehazeformer-t": 16, "dehazeformer-s": 16, "dehazeformer-b": 4, "dehazeformer-m": 4, "deanet": 8}   # B/M at 8 need ~15 GB: on a 16 GB card Windows then spills into system RAM (~30x slower)
+FT_INIT = {"deanet": "ckpt/deanet/deanet-ots.pth"}        # default: ckpt/outdoor/<model>.pth
+
+
+def train_eval(model, arm, seed, extra="", tag="", out="runs", res="results", rtts=""):
+    run = f"{model}__{arm}{('_' + tag) if tag else ''}_s{seed}"
+    t = f" --tag {tag}" if tag else ""
+    o = f" --out {out}" if out != "runs" else ""
+    r = f" --res_dir {res}" if res != "results" else ""
+    return [" ".join(f"python train.py --model {model} --arm {arm} --seed {seed} {extra}{t}{o}".split()),
+            f"python eval_paired.py --model {model} --ckpt {out}/{run}/final.pth{r}",
+            " ".join(f"python eval_rtts.py --model {model} --ckpt {out}/{run}/final.pth{r} {rtts}".split())]
+
+
+def ft_extra(model, iters, workers):
+    init = FT_INIT.get(model, f"ckpt/outdoor/{model}.pth")
+    return f"--init {init} --iters {iters} --lr 1e-4 --warmup 200 --bs {FT_BS.get(model, 8)} --workers {workers}"
+
+
+def baseline_cmds(res="results", rtts="", models=None):
+    r = f" --res_dir {res}" if res != "results" else ""
+    x = (" " + rtts) if rtts else ""
+    pre = models or [("dehazeformer-t", "outdoor"), ("dehazeformer-s", "outdoor"), ("dehazeformer-b", "outdoor"),
+                     ("dehazeformer-m", "outdoor"), ("dehazeformer-t", "reside6k"), ("dehazeformer-b", "reside6k")]
+    q = [f"python eval_paired.py --model hazy-input --name pre__hazy-input{r}",
+         f"python eval_rtts.py --model hazy-input --name pre__hazy-input{r}{x}",
+         f"python eval_paired.py --model dcp --name pre__dcp{r}",
+         f"python eval_rtts.py --model dcp --name pre__dcp{r}{x}",
+         f"python eval_rtts.py --pred_dir data/sota_outputs/HazeFlow/RTTS --name pre__hazeflow-iccv25{r}{x}"]
+    for m, src in pre:
+        q += [f"python eval_paired.py --model {m} --ckpt ckpt/{src}/{m}.pth --name pre__{m}-{src}{r}",
+              f"python eval_rtts.py --model {m} --ckpt ckpt/{src}/{m}.pth --name pre__{m}-{src}{r}{x}"]
+    q += [f"python eval_paired.py --model deanet --ckpt ckpt/deanet/deanet-ots.pth --name pre__deanet-ots{r}",
+          f"python eval_rtts.py --model deanet --ckpt ckpt/deanet/deanet-ots.pth --name pre__deanet-ots{r}{x}"]
+    return q
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--iters", type=int, default=40000)
+    ap.add_argument("--ft_iters", type=int, default=8000)
+    ap.add_argument("--model", default="dehazeformer-t")
+    ap.add_argument("--arch2", default="gunet-t")
+    ap.add_argument("--workers", type=int, default=4)
+    a = ap.parse_args()
+    W = f"--workers {a.workers}"
+    Q = {}
+    Q["q0_prep"] = [
+        "python setup_third_party.py",
+        "python tests/test_synth.py",
+        "python tests/test_models.py",
+        "python prepare_depth.py --clean_dir data/reside6k_ots/GT --out_dir data/depth/ots",
+        "python prepare_params.py --clean_dir data/reside6k_ots/GT --depth_dir data/depth/ots --K 8 --out data/params_ots.npz",
+        "python preflight.py",
+        "python realism.py --n 500",
+        f"python train.py --model {a.model} --arm R3 --time_only 200 {W}",
+    ]
+    Q["q1_baselines"] = baseline_cmds()
+    q = []
+    for arm in ["R0", "R3", "B0", "N0", "R1", "R2", "R3H", "H", "R4", "S0"]:
+        q += train_eval(a.model, arm, 0, f"--iters {a.iters} {W}")
+    Q["q2_ablation_s0"] = q
+    q = []
+    for m in ["dehazeformer-t", "dehazeformer-b", "deanet"]:
+        for arm in ["R3", "B0", "R0"]:
+            q += train_eval(m, arm, 0, ft_extra(m, a.ft_iters, a.workers), tag="ft")
+    Q["q3_finetune"] = q
+    q = []
+    for seed in [1, 2]:
+        for arm in ["R0", "R3", "R3H", "H", "B0"]:
+            q += train_eval(a.model, arm, seed, f"--iters {a.iters} {W}")
+    Q["q4_seeds"] = q
+    q = []
+    for arm in ["B0", "R0", "R3"]:
+        q += train_eval(a.arch2, arm, 0, f"--iters {a.iters} {W}")
+    Q["q5_arch2"] = q
+    for k, v in Q.items():
+        Path("queues").mkdir(exist_ok=True)
+        Path("queues", f"{k}.txt").write_text(f"# generated by make_queues.py --iters {a.iters} --ft_iters {a.ft_iters}\n" + "\n".join(v) + "\n")
+        print(f"queues/{k}.txt: {sum(l.startswith('python train.py') for l in v)} trainings, {len(v)} commands")
+
+
+if __name__ == "__main__":
+    main()

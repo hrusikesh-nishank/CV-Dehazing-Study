@@ -1,0 +1,16 @@
+# Second batch (about 2.2 h): third seed for the headline comparisons + forward-scatter blur.
+# Run after q_extra.txt has finished. Priority order; stop any time, then: python quick.py --report_only
+# 1-3. third seed: B0, R0, R1 (headline claims with 3 seeds)
+python train.py --model dehazeformer-t --arm B0 --seed 2 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__B0_s2/final.pth --res_dir results_quick
+python train.py --model dehazeformer-t --arm R0 --seed 2 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R0_s2/final.pth --res_dir results_quick
+python train.py --model dehazeformer-t --arm R1 --seed 2 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R1_s2/final.pth --res_dir results_quick
+# 4. forward-scatter blur (last image-formation component of the study)
+python train.py --model dehazeformer-t --arm R4 --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R4_s0/final.pth --res_dir results_quick
+# 5. camera model without noise, second seed
+python train.py --model dehazeformer-t --arm R3N --seed 1 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R3N_s1/final.pth --res_dir results_quick
+python quick.py --report_only

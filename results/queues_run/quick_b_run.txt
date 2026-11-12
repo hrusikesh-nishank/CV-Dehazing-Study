@@ -1,0 +1,57 @@
+# quick protocol, runs ({"dehazeformer-t": 3500, "gunet-t": 8400, "dehazeformer-b": 2100, "deanet": 4600})
+python eval_paired.py --model hazy-input --name pre__hazy-input --res_dir results_quick
+python eval_rtts.py --model hazy-input --name pre__hazy-input --res_dir results_quick --subset 500 --n_iqa 100
+python eval_paired.py --model dcp --name pre__dcp --res_dir results_quick
+python eval_rtts.py --model dcp --name pre__dcp --res_dir results_quick --subset 500 --n_iqa 100
+python eval_rtts.py --pred_dir data/sota_outputs/HazeFlow/RTTS --name pre__hazeflow-iccv25 --res_dir results_quick --subset 500 --n_iqa 100
+python eval_paired.py --model dehazeformer-t --ckpt ckpt/outdoor/dehazeformer-t.pth --name pre__dehazeformer-t-outdoor --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt ckpt/outdoor/dehazeformer-t.pth --name pre__dehazeformer-t-outdoor --res_dir results_quick --subset 500 --n_iqa 100
+python eval_paired.py --model dehazeformer-b --ckpt ckpt/outdoor/dehazeformer-b.pth --name pre__dehazeformer-b-outdoor --res_dir results_quick
+python eval_rtts.py --model dehazeformer-b --ckpt ckpt/outdoor/dehazeformer-b.pth --name pre__dehazeformer-b-outdoor --res_dir results_quick --subset 500 --n_iqa 100
+python eval_paired.py --model deanet --ckpt ckpt/deanet/deanet-ots.pth --name pre__deanet-ots --res_dir results_quick
+python eval_rtts.py --model deanet --ckpt ckpt/deanet/deanet-ots.pth --name pre__deanet-ots --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm R0 --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R0_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R0_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm R3 --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R3_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R3_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm B0 --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__B0_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__B0_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm R1 --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R1_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R1_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm R2 --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R2_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R2_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model gunet-t --arm R0 --seed 0 --iters 8400 --warmup 840 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model gunet-t --ckpt runs_quick/gunet-t__R0_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model gunet-t --ckpt runs_quick/gunet-t__R0_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model gunet-t --arm R3 --seed 0 --iters 8400 --warmup 840 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model gunet-t --ckpt runs_quick/gunet-t__R3_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model gunet-t --ckpt runs_quick/gunet-t__R3_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-b --arm R0 --seed 0 --init ckpt/outdoor/dehazeformer-b.pth --iters 2100 --lr 1e-4 --warmup 100 --bs 4 --params data/params_quick.npz --n_train 1000 --workers 4 --tag ft --out runs_quick
+python eval_paired.py --model dehazeformer-b --ckpt runs_quick/dehazeformer-b__R0_ft_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-b --ckpt runs_quick/dehazeformer-b__R0_ft_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-b --arm R3 --seed 0 --init ckpt/outdoor/dehazeformer-b.pth --iters 2100 --lr 1e-4 --warmup 100 --bs 4 --params data/params_quick.npz --n_train 1000 --workers 4 --tag ft --out runs_quick
+python eval_paired.py --model dehazeformer-b --ckpt runs_quick/dehazeformer-b__R3_ft_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-b --ckpt runs_quick/dehazeformer-b__R3_ft_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model deanet --arm R0 --seed 0 --init ckpt/deanet/deanet-ots.pth --iters 4600 --lr 1e-4 --warmup 100 --bs 8 --params data/params_quick.npz --n_train 1000 --workers 4 --tag ft --out runs_quick
+python eval_paired.py --model deanet --ckpt runs_quick/deanet__R0_ft_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model deanet --ckpt runs_quick/deanet__R0_ft_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model deanet --arm R3 --seed 0 --init ckpt/deanet/deanet-ots.pth --iters 4600 --lr 1e-4 --warmup 100 --bs 8 --params data/params_quick.npz --n_train 1000 --workers 4 --tag ft --out runs_quick
+python eval_paired.py --model deanet --ckpt runs_quick/deanet__R3_ft_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model deanet --ckpt runs_quick/deanet__R3_ft_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm R0 --seed 1 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R0_s1/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R0_s1/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm R3 --seed 1 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R3_s1/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R3_s1/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm H --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__H_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__H_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100
+python train.py --model dehazeformer-t --arm R3H --seed 0 --iters 3500 --warmup 350 --params data/params_quick.npz --n_train 1000 --workers 4 --out runs_quick
+python eval_paired.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R3H_s0/final.pth --res_dir results_quick
+python eval_rtts.py --model dehazeformer-t --ckpt runs_quick/dehazeformer-t__R3H_s0/final.pth --res_dir results_quick --subset 500 --n_iqa 100

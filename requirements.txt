@@ -1,0 +1,18 @@
+# Install PyTorch FIRST for the RTX 5060 Ti (Blackwell, sm_120) -- CUDA 12.8+ wheels only:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+# then:  pip install -r requirements.txt
+numpy<2          # keep numpy 1.x so other packages in a shared env (e.g. TensorFlow) do not break
+scipy
+pillow
+pandas
+tqdm
+matplotlib
+scikit-image
+timm            # DehazeFormer / gUNet layers
+einops          # DEA-Net
+transformers>=4.49   # Depth Pro (prepare_depth.py)
+accelerate
+ultralytics     # YOLOv8m for RTTS detection
+pyiqa           # NIQE / BRISQUE / MUSIQ / CLIPIQA
+torchmetrics    # KID (realism.py)
+torch-fidelity  # KID backend
