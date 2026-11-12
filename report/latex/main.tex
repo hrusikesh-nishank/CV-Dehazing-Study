@@ -62,6 +62,10 @@ This report describes such a study, run at a small scale in the time available f
 \item Evidence about which components matter. A realistic distribution of haze density, which metric depth and visibility make controllable, improves structural accuracy (SSIM) even when it is calibrated on a different real dataset. Matching the airlight colour of the target data accounts for most of the PSNR gain. Linear compositing helps when training from scratch, and sensor noise and our heterogeneous-extinction model hurt.
 \end{enumerate}
 
+\paragraph{Relation to our project proposal.} Our proposal set three objectives: a forward-rendered paired dataset from 3D reconstructions of real scenes, a controlled ablation of the synthesis components with scenes and network held fixed, and a wavelength-dependent model of South Asian pollution haze. The proposal named the controlled ablation as the scientific core and the fallback if reconstruction proved too slow, and that is what this report carries out, on monocular metric depth instead of 3D reconstructions. The proposal's central claim, that removing the camera and ISP stage costs more accuracy than removing haze heterogeneity, is tested in Section~\ref{sec:components}, and is not supported in the form we stated it. The other two objectives remain future work (Section~\ref{sec:conclusion}).
+
+\paragraph{Code.} The code, the per-run results and the scripts that produce every number and table in this report are in the GitHub repository \texttt{hrusikesh-nishank/CV-Dehazing-Study}.
+
 % =====================================================================
 \section{Literature Review}
 \label{sec:related}
@@ -185,6 +189,7 @@ Table~\ref{tab:main} places the published checkpoints and our trained models und
 \end{table}
 
 \subsection{Which image-formation components matter}
+\label{sec:components}
 Table~\ref{tab:steps} and Figure~\ref{fig:effects} isolate each component for DehazeFormer-T trained from scratch; Table~\ref{tab:arms} in the appendix lists the absolute numbers.
 
 \paragraph{Haze density and airlight colour.} Our sRGB arm R0 is 1.38, 1.02 and 1.33\,dB better than RESIDE's hazy images (B0) on the three sets (three seeds each), and all three intervals exclude zero. Two controls show what this gain needs. Removing the airlight colour (N0) makes the result \emph{worse} than B0 by 0.5--1.0\,dB, and the sky-coloured airlight alone accounts for 1.5--2.4\,dB (R0 $-$ N0). Removing the density window (R0\textsubscript{unc}) brings the result back to the level of B0, within 0.3\,dB on all three sets. Metric depth and visibility in metres make haze density and colour controllable, but on their own (N0, R0\textsubscript{unc}) they do not help. The next subsection asks how much of the gain depends on calibrating these two quantities on the test sets.
