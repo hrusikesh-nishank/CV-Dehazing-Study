@@ -3,7 +3,7 @@
 \usepackage[preprint,nonatbib]{neurips_2025}
 \usepackage[numbers,sort&compress]{natbib}
 \makeatletter
-\renewcommand{\@noticestring}{CSL7360 Computer Vision, course project report, IIT Jodhpur, November 2026.}
+\renewcommand{\@noticestring}{CSL7360 Computer Vision, course project report, Team Sharanga, IIT Jodhpur, November 2026.}
 \makeatother
 
 \usepackage[utf8]{inputenc}
@@ -33,7 +33,7 @@
   Indian Institute of Technology Jodhpur \\
   \And
   Akanksha Tiwari \\
-  Department of Computer Science and Engineering\\
+  School of Artificial Intelligence and Data Science\\
   Indian Institute of Technology Jodhpur \\
 }
 
@@ -98,30 +98,40 @@ Figure~\ref{fig:pipeline} summarises the pipeline. Each stage is a switch that d
 \centering
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[
-  box/.style={draw, rounded corners=2pt, align=center, font=\small, minimum height=1.25cm, minimum width=2.55cm, inner sep=3pt, fill=white},
+  box/.style={draw, rounded corners=2pt, align=center, font=\small, minimum height=1.25cm, minimum width=2.6cm, inner sep=3pt, fill=white},
   opt/.style={box, dashed, fill=gray!10},
   cal/.style={box, fill=orange!12},
+  lab/.style={font=\footnotesize\itshape, fill=white, inner sep=1pt},
   arr/.style={-{Stealth[length=2.2mm]}, thick}]
-% middle row: synthesis
+% row 2: the synthesis chain
 \node[box] (J) {Clear image $J$\\RESIDE-6K OTS};
-\node[box, right=0.55cm of J] (D) {Depth Pro\\metric depth $d$ (m)};
-\node[box, right=0.55cm of D] (V) {Visibility $V$ (m)\\$\beta = 2.996/V$};
-\node[box, right=0.55cm of V] (T) {Transmission\\$t = e^{-\beta d}$};
-\node[box, right=0.55cm of T, minimum width=3.2cm] (C) {Composite\\$I = J\,t + A\,(1-t)$\\sRGB (R0) / linear (R1)};
-% top row
-\node[cal, above=0.6cm of D, minimum width=4.2cm, xshift=0.6cm] (cal) {Real hazy images, no reference:\\dark channel $\rightarrow$ density window\\colour cast $\rightarrow$ daylight range};
-\node[opt, above=0.6cm of T] (H) {Heterogeneous $\beta$\\fBm field (H)};
-\node[box, above=0.6cm of C, minimum width=3.2cm] (A) {Airlight $A$\\sky luminance $\times$\\daylight colour};
-% bottom row: camera, training, test
-\node[opt, below=0.6cm of C, minimum width=3.2cm] (cam) {Camera (R2, R3)\\noise, WB error,\\tone curve, JPEG};
-\node[box, below=0.6cm of T] (N) {Train network\\scratch or fine-tune};
-\node[box, below=0.6cm of D, minimum width=4.2cm, xshift=0.6cm] (E) {Zero-shot test on real haze\\O-HAZE, NH-HAZE, Dense-Haze\\RTTS (no reference)};
-\draw[arr] (J) -- (D); \draw[arr] (D) -- (V); \draw[arr] (V) -- (T); \draw[arr] (T) -- (C);
-\draw[arr] (cal.south -| V) -- (V); \draw[arr] (cal.north) |- ($(A.north)+(0,0.25)$) -- (A.north);
-\draw[arr] (A) -- (C); \draw[arr, dashed] (H) -- (T);
-\draw[arr, dashed] (C) -- (cam); \draw[arr] (cam) -- (N); \draw[arr] (N) -- (E.east |- N);
+\node[box, right=0.6cm of J] (D) {Depth Pro\\metric depth $d$ (m)};
+\node[box, right=0.6cm of D] (V) {Visibility $V$ (m)\\$\beta = 2.996/V$};
+\node[box, right=0.6cm of V] (T) {Transmission\\$t = e^{-\beta d}$};
+\node[box, right=0.6cm of T, minimum width=3.3cm] (C) {Composite\\$I = J\,t + A\,(1-t)$\\sRGB (R0) / linear (R1)};
+% row 1: calibration and airlight
+\node[cal, above=1.0cm of V, minimum width=5.6cm] (cal) {Calibration from real hazy images (no reference):\\dark-channel and colour-cast statistics};
+\node[box, minimum width=3.3cm] (A) at (C |- cal) {Airlight $A$\\sky luminance $\times$\\daylight colour};
+% row 3: optional modules
+\node[opt, below=1.0cm of T] (H) {Heterogeneous $\beta$\\fBm field (H, R3H)};
+\node[opt, below=1.0cm of C, minimum width=3.3cm] (cam) {Camera (R2, R3)\\noise, WB error,\\tone curve, JPEG};
+% row 4: training and testing
+\node[box, below=0.6cm of cam, minimum width=3.3cm] (N) {Train network\\scratch or fine-tune};
+\node[box, left=0.6cm of N, minimum width=5.6cm] (E) {Zero-shot test on real haze:\\O-HAZE, NH-HAZE, Dense-Haze, RTTS};
+% arrows
+\draw[arr] (J) -- (D);
+\draw[arr] (D) -- (V);
+\draw[arr] (V) -- (T);
+\draw[arr] (T) -- (C);
+\draw[arr] (cal) -- node[lab, right] {density window} (V);
+\draw[arr] (cal) -- node[lab, above] {colour range} (A);
+\draw[arr] (A) -- (C);
+\draw[arr, dashed] (H) -- (T);
+\draw[arr, dashed] (C) -- (cam);
+\draw[arr] (cam) -- (N);
+\draw[arr] (N) -- (E);
 \end{tikzpicture}}
-\caption{Synthesis pipeline. Solid boxes are used by every arm; dashed boxes are switched on only in some arms. The orange box is the calibration step: the haze density window and the airlight colour range are set from statistics of real hazy images, without their reference images. All arms share the same depth maps and random draws.}
+\caption{Synthesis pipeline. Solid boxes are used by every arm; dashed boxes are switched on only in some arms (the camera for R2, R3 and R3N; the heterogeneous field for H and R3H). The orange box is the calibration step: the haze density window and the airlight colour range are set from statistics of real hazy images, without their reference images. All arms share the same depth maps and random draws.}
 \label{fig:pipeline}
 \end{figure}
 

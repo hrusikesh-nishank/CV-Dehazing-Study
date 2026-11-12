@@ -1,6 +1,6 @@
 # What Makes Synthetic Haze Transfer to Real Haze? A Controlled Study of Physically Grounded Haze Synthesis
 
-**Hrusikesh Nishank, Akanksha Tiwari** — Indian Institute of Technology Jodhpur
+**Team Sharanga**: Hrusikesh Nishank (Department of Computer Science and Engineering) and Akanksha Tiwari (School of Artificial Intelligence and Data Science), Indian Institute of Technology Jodhpur
 CSL7360 Computer Vision, course project, November 2026
 
 The report is in [`report/CV_Dehazing_Study_Report.pdf`](report/CV_Dehazing_Study_Report.pdf), and its LaTeX source in [`report/latex/`](report/latex/).
@@ -18,6 +18,8 @@ The synthesis pipeline is built on metric depth (Depth Pro). Haze density is exp
 - spatially varying extinction.
 
 Each variant ("arm") is used to train DehazeFormer-T and gUNet-T from scratch, or to fine-tune the published DehazeFormer-B and DEA-Net checkpoints. Every model is then tested zero-shot on real haze: O-HAZE, NH-HAZE and Dense-Haze for PSNR/SSIM, and RTTS for detection and no-reference quality.
+
+![Synthesis pipeline](results/figures/report_pipeline.png)
 
 ### Main findings (preliminary: 1,000 training images, short schedules)
 
